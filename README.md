@@ -26,7 +26,7 @@ npm run dev
 `
 *The dashboard will be available at `http://localhost:5173`.*
 
-**3⚠️ EVALUATION SETUP:**
+**3 EVALUATION SETUP:**
 Before running the pipeline, please create a folder named `CCTV Footage` inside the `data/cctv/` directory, and place the evaluation `.mp4` video files inside it (Path: `data/cctv/CCTV Footage/*.mp4`).
 
 **4. Execute the Vision Pipeline**
