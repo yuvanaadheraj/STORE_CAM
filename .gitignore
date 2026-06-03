@@ -1,0 +1,23 @@
+# Datasets and Video (STRICT BLOCK)
+*.zip
+data/cctv/
+data/store_intelligence.db
+
+# AI Models
+*.pt
+*.engine
+*.onnx
+
+# Environment and Cache
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+*.log
+
+# Mac System Files
+.DS_Store
+
+# Frontend Node Modules
+apex-dashboard/node_modules/
+apex-dashboard/dist/
