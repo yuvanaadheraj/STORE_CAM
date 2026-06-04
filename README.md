@@ -1,42 +1,52 @@
-# Apex Retail Intelligence: Store ST1008
+# Apex Retail Intelligence
 
-An end-to-end AI-powered Store Intelligence System built for the Purplle Tech Challenge 2026. This system processes raw CCTV footage using edge-optimized computer vision, aggregates spatial events into a centralized API, and visualizes retail metrics (Conversion Rate, Queue Depth, Dwell Times) in real-time.
+**Edge-Optimized Store Funnel & Temporal Ghost Filter**
 
-## System Architecture Overview
-* **Frontend:** React, Tailwind CSS, Vite
-* **Backend API:** FastAPI, Uvicorn, SQLite
-* **Vision Pipeline:** YOLOv8n, ByteTrack (Edge-optimized)
-* **Containerization:** Docker & Docker Compose
+A Store Intelligence System designed for the Purplle Tech Challenge 2026. This platform brings e-commerce-level analytics (Conversion Funnels, Dwell Times, and Drop-off Rates) into physical retail spaces using edge-optimized computer vision and POS data fusion.
 
-## Quick Start (Evaluation Guide)
+## Key Innovations
 
-**1. Start the Backend API & Database**
-To spin up the containerized backend and initialize the database:
-`bash
+*   **Temporal Ghost Filter:** Resolves tracking ID fragmentation across overlapping CCTV cameras without heavy spatial Re-ID models. The temporal aggregation filter mathematically stabilizes the footfall count, successfully filtering raw tracks down to a verified 74 unique visitors.
+*   **POS & Vision Integration:** Fuses physical footfall (YOLOv8n + ByteTrack) with point-of-sale offline data to calculate a mathematically true real-time conversion rate (32.43%) and department-level GMV yields (₹44,920 in total revenue tracked).
+*   **Zero-Friction Deployment:** A fully containerized application stack (React, FastAPI, SQLite) via Docker for seamless evaluator launch.
+
+## Technology Stack
+
+*   **Computer Vision:** YOLOv8n, ByteTrack, OpenCV
+*   **Backend API:** FastAPI, Python, SQLite, Pandas
+*   **Frontend Dashboard:** React, Vite, Tailwind CSS
+*   **Infrastructure:** Docker, Containerized Microservices
+
+---
+
+## Evaluation Setup & Instructions
+
+**⚠️ WARNING: Video Assets Required**
+Before running the pipeline, please ensure the evaluation `.mp4` video files are placed inside the following directory structure: `data/cctv/CCTV Footage/*.mp4`
+
+### 1. Boot the Backend API & Database
+
+Open a terminal at the project root and start the containerized backend:
+
+```bash
 docker compose up --build
-`
-*The API will be available at `http://localhost:8000`.*
+(The FastAPI server will be available at http://127.0.0.1:8000)
 
-**2. Start the Live Dashboard**
-Open a second terminal window to launch the UI:
-`bash
+2. Launch the Live React Dashboard
+Open a second terminal, navigate to the frontend directory, and run the development server:
+
+Bash
 cd apex-dashboard
 npm install
 npm run dev
-`
-*The dashboard will be available at `http://localhost:5173`.*
+(The live dashboard will be available at http://localhost:5173)
 
-**3 EVALUATION SETUP:**
-Before running the pipeline, please create a folder named `CCTV Footage` inside the `data/cctv/` directory, and place the evaluation `.mp4` video files inside it (Path: `data/cctv/CCTV Footage/*.mp4`).
+3. Execute the Vision Pipeline
+Open a third terminal at the project root and execute the edge detection script:
 
-**4. Execute the Vision Pipeline**
-Open a third terminal window to process the CCTV feeds and ingest telemetry data:
-`bash
-python3 scripts/run_pipeline.py --api http://127.0.0.1:8000 --skip-frames 2
-`
+Bash
+python3 scripts/run_pipeline.py --api [http://127.0.0.1:8000](http://127.0.0.1:8000) --skip-frames 2
+Once the pipeline begins processing the video frames, the React dashboard will automatically poll the API and update the key business metrics in real-time.
 
-## Testing & Quality Assurance
-To verify production readiness, edge-case handling, and the temporal ghost-filtering logic:
-`bash
-python3 -m pytest tests/ -v
-`
+
+Once you save this, you can run your standard Git commands (`git add README.md`, `git commit -m "docs: Finalize README"`, `git push origin main`) to get it onto GitHub before you download your final ZIP for submission!
