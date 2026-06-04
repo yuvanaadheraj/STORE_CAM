@@ -9,6 +9,7 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from .db import get_repo
 from .health import get_health
@@ -20,11 +21,13 @@ from .heatmap import compute_heatmap
 from .anomalies import compute_anomalies
 from .pos import POS_CSV_PATH
 
+# NEW: Import your pos_analytics router
+from app.pos_analytics import router as pos_analytics_router
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("store_intelligence")
 
 app = FastAPI(title="Store Intelligence API", version="1.0.0")
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,8 +36,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-POS_CSV = os.getenv("POS_CSV_PATH", POS_CSV_PATH)
 
+# NEW: Plug the new analytics router into the app
+app.include_router(pos_analytics_router)
+
+POS_CSV = os.getenv("POS_CSV_PATH", POS_CSV_PATH)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -60,17 +66,11 @@ def health():
 
 @app.post("/events/ingest", response_model=IngestResponse)
 async def ingest(request: Request):
-    """
-    Accept up to 500 events. Idempotent by event_id.
-    Returns 207 if any events were rejected, 200 otherwise.
-    Never 5xx for bad event data.
-    """
     try:
         body = await request.json()
     except Exception as exc:
         raise HTTPException(status_code=400, detail=f"Invalid JSON: {exc}")
 
-    # Accept either {events:[...]} envelope or a bare list
     if isinstance(body, dict):
         raw_events = body.get("events", [])
     elif isinstance(body, list):
@@ -82,7 +82,6 @@ async def ingest(request: Request):
         raise HTTPException(status_code=400, detail="Batch size exceeds 500 events")
 
     result = ingest_events(raw_events, repo=get_repo())
-
     status_code = 207 if result.rejected else 200
     return JSONResponse(content=result.model_dump(), status_code=status_code)
 
@@ -90,10 +89,6 @@ async def ingest(request: Request):
 # ── Store endpoints ──────────────────────────────────────────────────────────
 
 def _day_events(store_id: str, date: Optional[str] = None) -> list[dict]:
-    """
-    Load events for a given UTC day.
-    date: "YYYY-MM-DD" string. Defaults to today UTC.
-    """
     repo = get_repo()
     if date:
         try:
