@@ -49,4 +49,3 @@ python3 scripts/run_pipeline.py --api [http://127.0.0.1:8000](http://127.0.0.1:8
 Once the pipeline begins processing the video frames, the React dashboard will automatically poll the API and update the key business metrics in real-time.
 
 
-Once you save this, you can run your standard Git commands (`git add README.md`, `git commit -m "docs: Finalize README"`, `git push origin main`) to get it onto GitHub before you download your final ZIP for submission!
