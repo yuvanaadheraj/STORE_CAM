@@ -24,3 +24,9 @@ The Apex Retail Intelligence system was designed strictly for **edge-optimized p
 2. **Telemetry:** Spatial movements are converted into batch REST API POST requests.
 3. **Aggregation:** FastAPI cleanses the tracks, merges them with POS data, and stores them in SQLite.
 4. **Visualization:** React queries the backend for structured UI insights.
+
+## 4. AI-Assisted Decisions
+During the development of this system, AI was strategically leveraged to accelerate boilerplate generation and optimize complex logic:
+* **Architecture & Containerization:** Used AI to quickly scaffold the Docker Compose configurations and the React + Tailwind layout, ensuring a zero-friction deployment.
+* **Algorithm Optimization:** The mathematical logic behind the Temporal Ghost Filter (handling timestamp deltas and zone bounding boxes) was refined with AI to prevent high time complexity during real-time tracking.
+* **Data Fusion Parsing:** AI assisted in crafting the exact Pandas dataframe transformations required to seamlessly merge the offline `pos_transactions.csv` with the live FastApi telemetry.

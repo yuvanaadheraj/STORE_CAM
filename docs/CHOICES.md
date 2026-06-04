@@ -25,3 +25,7 @@ This document outlines the rationale behind key engineering decisions, prioritiz
 **The Problem:** "It works on my machine" is a massive risk for evaluation.
 **The Solution:** The entire backend, database, and POS parsing logic is wrapped in `docker compose`. 
 **Result:** Zero-friction deployment for evaluators, ensuring the API and metrics are instantly available on port 8000.
+
+## 5. Schema Design
+**The Problem:** Storing thousands of raw video frame events in a relational database can quickly degrade read performance for the live dashboard.
+**The Solution:** The database schema is intentionally decoupled. Raw `Events` (zone_enter, zone_dwell) are stored in a lightweight, write-heavy flat table. Conversely, `Sessions` (aggregated unique visitors) and `POS_Metrics` are stored in optimized tables. This schema design ensures the React frontend can query the `/metrics` endpoint using rapid aggregate functions without having to scan raw bounding-box coordinates.
